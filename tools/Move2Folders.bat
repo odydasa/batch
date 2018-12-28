@@ -1,0 +1,8 @@
+@ECHO OFF
+SETLOCAL
+FOR %%A IN (%*) DO IF EXIST "*%%~A*.*" (
+  IF NOT EXIST %%A MD %%A
+  MOVE "*%%~A*.*" %%A
+)
+ENDLOCAL
+GOTO :EOF
