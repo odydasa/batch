@@ -1,1 +1,0 @@
-@"%ProgramFiles%\WGet\%~nx0" %*
