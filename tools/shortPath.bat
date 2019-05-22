@@ -1,0 +1,15 @@
+@ECHO OFF
+SET _PATH=
+:CALL "%~dp0setEnv.bat"
+FOR %%A IN (%PATH%) DO CALL :shortPath "%%~fA"
+:SET PATH=%_PATH%
+SET _PATH
+:SET _PATH=
+GOTO :EOF
+
+:shortPath
+ECHO %~s1
+IF "%~1"=="" GOTO :EOF
+IF NOT DEFINED _PATH SET _PATH=%~s1
+IF DEFINED PATH SET _PATH=%_PATH%;%~s1
+GOTO :EOF
