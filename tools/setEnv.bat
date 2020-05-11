@@ -1,4 +1,8 @@
 @ECHO OFF
+:: Version 20200331
+::  - some minor fixing
+::  - edit PATHs for Python and Java
+::
 :: Version 20190211
 ::  - fixed HOME setting
 ::
@@ -34,15 +38,21 @@ FOR %%A IN ("%CD%" "%ProgramFiles%" "%ProgramFiles(x86)%" D:\.data) DO IF EXIST 
     FOR %%C IN (%PATHEXT%) DO IF EXIST "%%~fA\*%%~C" CALL :run SET _skip1=
   )
   IF NOT DEFINED _skip1 CALL :addPathList "%%~fA"
-  CALL :addPathList PHP Java\jdk\jre\bin Java\jdk\bin
+  CALL :addPathList Common Files\Oracle\Java\javapath
+  FOR %%B IN (jdk jdk\jre jre) DO CALL :addPathList "Java\%%~B\bin"
+  FOR %%B IN ("-64" "-32" "") DO FOR %%C IN (38 37 27) DO (
+    CALL :addPathList "Python%%~C%%~B\Scripts"
+    CALL :addPathList "Python%%~C%%~B"
+  )
+  CALL :addPathList PHP 
   CALL :addPathList Cygwin\bin 
   CALL :addPathList 7-zip WinRAR WinZip 
-  CALL :addPathList Far "FAR Manager" putty DHCPSrv DOSbox WGet 
-  CALL :addPathList batch compress bin exec
+  CALL :addPathList Far "FAR Manager" DHCPSrv WGet 
+  CALL :addPathList batch compress exec
   FOR %%B IN (.data\.tools .tools) DO IF EXIST "%%~fA\%%~B" (
     ECHO. > nul
     CALL :addPathList "%%~fA\%%~B"
-    FOR /D %%C IN ("%%~A\%%~B\*" "%%~A\%%~B\Tools\*") DO FOR %%D IN ("" "\bin") DO (
+    FOR /D %%C IN ("%%~A\%%~B\*" "%%~A\%%~B\Tools-\*") DO FOR %%D IN ("" "\bin") DO (
       CALL :run SET _skip2=
       FOR %%E IN (%PATHEXT%) DO IF NOT DEFINED _skip2 (
         IF EXIST "%%~fC%%~D\*%%~E" CALL :addPathList "%%~fC%%~D"
@@ -50,7 +60,11 @@ FOR %%A IN ("%CD%" "%ProgramFiles%" "%ProgramFiles(x86)%" D:\.data) DO IF EXIST 
       )
     )
   )
-  CALL :addPathList Skype\Phone unlocker 
+  ECHO. > nul
+  CALL :addPathList unlocker LockHunter DOSbox 
+  CALL :addPathList "Internet Download Manager"
+  CALL :addPathList PuTTY WinSCP Winbox\bin 
+  CALL :addPathList "K-Lite Codec Pack\MPC-HC"
   CD /D "%_CD%\"
   ECHO :: Setting path from %%~fA: done.
   ECHO.

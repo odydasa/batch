@@ -1,12 +1,9 @@
 @ECHO OFF
 SETLOCAL
-SET _user=Administrator
-SET _host=%SystemRoot%\System32\drivers\etc\hosts
-SET _notepad=notepad
+SET _app=notepad
+SET _hosts=%SystemRoot%\System32\drivers\etc\hosts
+SET _user=administrator
 
-FOR %%A IN (%PATH%) DO IF EXIST "%%~A\notepad2.exe" SET _notepad=%%~A\notepad2
-
-runas /user:%_user% /savecred "%_notepad% %_host%"
-
+FOR %%A IN (%PATH%) DO IF EXIST "%%~A\%_app%2.exe" SET _app=%%~A\%_app%2
+runas /user:%_user% /savecred "%_app% %_hosts%"
 ENDLOCAL
-GOTO :EOF
