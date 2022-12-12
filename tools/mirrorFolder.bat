@@ -4,9 +4,10 @@ SETLOCAL
 SET _cmd=blinksync
 SET _params=-m -r -u
 SET _xd=nul,cat,con,.sync,_gsdata_
-SET _xf=~$*.*,~*.tmp,Thumbs.db,*thumb*.dat,.sync*,.drop*,*.bts,*.!sync,*onfli*.*,.nomedia,desktop.ini
+SET _xf=~$*.*,~*.tmp,Thumbs.db,*thumb*.dat,.sync*,.drop*,*.bts,*.!sync,*onfli*.*,.nomedia
+SET _xf=%_xf%,desktop.ini
 
-SET _resetACL=
+SET _resetACL=OK
 SET _resetAtt=OK
 
 CALL :init %*

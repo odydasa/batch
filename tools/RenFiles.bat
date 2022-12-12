@@ -15,7 +15,9 @@ GOTO :EOF
 :x
 SET _x=%*
 CALL SET _x=%%_x:%_x1:~1,-1%=%_x2:~1,-1%%%
-IF NOT %*==%_x% REN %* %_x%
+IF NOT %*==%_x% (
+  REN %* %_x% || MOVE /Y %* %_x%
+)
 GOTO :EOF
 
 :run

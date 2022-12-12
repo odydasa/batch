@@ -20,7 +20,8 @@ ENDLOCAL
 GOTO :EOF
 
 :which
-FOR %%A IN (%PATH%;"%CD%") DO IF EXIST "%%~A\%~1" ECHO %%~A\%~1
+REM FOR %%A IN (%PATH%;"%CD%") DO IF EXIST "%%~A\%~1" ECHO %%~A\%~1
+FOR %%A IN (%PATH%;"%CD%") DO FOR %%B IN ("%%~A\%~1") DO IF EXIST "%%~fB" ECHO %%~fB
 GOTO :EOF
 
 :help

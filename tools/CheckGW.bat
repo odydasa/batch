@@ -83,7 +83,7 @@ SET _tgt=%*
 IF NOT "%_tgt%"=="%_tgt::=%" GOTO :EOF
 SET ERRORLEVEL=
 ECHO Check connection to: %*
-((ping -a -4 %* | find "TTL") && SET ERRORLEVEL=0) || SET ERRORLEVEL=1
+((ping -4 %* | find "TTL") && SET ERRORLEVEL=0) || SET ERRORLEVEL=1
 IF "%ERRORLEVEL%"=="1" (
   ECHO   Connection error!
 )
@@ -136,10 +136,12 @@ IF NOT "%_txtTmp%"=="%_txtTmp:=%" (
   FOR /F "tokens=1,2,1-2 delims=" %%A IN ("%_txtTmp: =%") DO CALL :getGW %%~A %%~B
 ) ELSE (
   IF /I "%_txtVar%"=="DefaultGateway" IF "%_txtTmp:~0,1%"==" " (
-    SET _txtVal=%_txtTmp: =%
+    SET _txtVal="%_txtTmp: =%"
   )
 )
 IF NOT DEFINED _txtVal GOTO :EOF
+FOR %%A IN (%_txtVal%) DO SET _txtVal=%%~A
+ECHO %_txtVal%
 FOR %%A IN (%_listGW%) DO IF "%%~A"=="%_txtVal%" GOTO :EOF
 CALL :addVar _listGW %_txtVal%
 GOTO :EOF

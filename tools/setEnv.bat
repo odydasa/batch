@@ -24,7 +24,7 @@ FOR %%A IN ("%ProgramData%") DO IF EXIST "%%~fA" (
   ECHO :: Setting path from %%~fA
   CD /D "%%~fA"
   CALL :addPathList "Oracle\Java\javapath" 
-  CD /D "%_CD%\"
+  CD /D %_CD%
   ECHO :: Setting path from %%~fA: done.
   ECHO.
 )
@@ -48,7 +48,7 @@ FOR %%A IN ("%CD%" "%ProgramFiles%" "%ProgramFiles(x86)%" D:\.data) DO IF EXIST 
   CALL :addPathList Cygwin\bin 
   CALL :addPathList 7-zip WinRAR WinZip 
   CALL :addPathList Far "FAR Manager" DHCPSrv WGet 
-  CALL :addPathList batch compress exec
+  CALL :addPathList batch compress exec LockHunter
   FOR %%B IN (.data\.tools .tools) DO IF EXIST "%%~fA\%%~B" (
     ECHO. > nul
     CALL :addPathList "%%~fA\%%~B"
@@ -65,7 +65,7 @@ FOR %%A IN ("%CD%" "%ProgramFiles%" "%ProgramFiles(x86)%" D:\.data) DO IF EXIST 
   CALL :addPathList "Internet Download Manager"
   CALL :addPathList PuTTY WinSCP Winbox\bin 
   CALL :addPathList "K-Lite Codec Pack\MPC-HC"
-  CD /D "%_CD%\"
+  CD /D %_CD%
   ECHO :: Setting path from %%~fA: done.
   ECHO.
 )
@@ -79,7 +79,7 @@ FOR /D %%A IN (%PATH% "%USERPROFILE%") DO IF EXIST "%%~fA\.antiword\" (
 )
 
 :END
-CD /D "%_CD%\"
+CD /D %_CD%
 FOR %%A IN (CD path checkPath skip1 skip2) DO SET _%%~A=
 GOTO :EOF
 

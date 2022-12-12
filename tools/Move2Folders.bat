@@ -2,7 +2,7 @@
 SETLOCAL
 FOR %%A IN (%*) DO IF EXIST "*%%~A*.*" (
   IF NOT EXIST %%A MD %%A
-  MOVE "*%%~A*.*" %%A
+  MOVE /Y "*%%~A*.*" %%A
 )
 ENDLOCAL
 GOTO :EOF

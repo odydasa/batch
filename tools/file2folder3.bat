@@ -10,12 +10,91 @@ CALL :setPattern ##TYPE##-##DATE##-##SERIES##.*
 CALL :setTypeDateSeries ???,0,3 ; ????????,4,8 ; ??????,13,6
 CALL :job
 
+REM This pattern ruin other files
+REM CALL :setPattern ##TYPE####DATE####SERIES##*.*
+REM CALL :setTypeDateSeries ???,0,3 ; ????????,3,8 ; ??????,11,6
+REM CALL :job
+
 CALL :setPattern ##DATE##_##SERIES##.##TYPE##
 CALL :setTypeDateSeries ???,-3,3 ; ????????,0,8 ; ??????*,9,6
 CALL :job
 
 CALL :setPattern ##DATE## ##SERIES##.##TYPE##
 CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,0,10 ; ??.??.??*,11,8
+CALL :job
+
+CALL :setPattern ##DATE## ##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,0,10 ; ??_??_??*,11,8
+CALL :job
+
+REM 00000000001111111111222222222
+REM 01234567890123456789012345678
+REM PHOTO-YYYY-MM-DD-HH-mm-ss.jpg
+CALL :setPattern photo-##DATE##-##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,6,10 ; ??-??-??*,17,8
+CALL :job
+
+REM Screenshot_YYYY-MM-DD-HH-mm-ss-*.jpg
+CALL :setPattern Screenshot_##DATE##-##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,11,10 ; ??-??-??*,22,8
+CALL :job
+
+CALL :setPattern Screenshot ##DATE## ##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,11,10 ; ??.??.??*,22,8
+CALL :job
+
+REM Capture-YYYY-MM-DD HH_mm_ss*.jpg
+CALL :setPattern Capture-##DATE## ##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,8,10 ; ??_??_??*,22,8
+CALL :job
+
+REM Capture-YYYYMMDD-HHmmss*.jpg
+CALL :setPattern Capture-##DATE##-##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????????,8,8 ; ??????*,17,6
+CALL :job
+
+CALL :setPattern Capture ##DATE## ##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????????,8,8 ; ??????*,17,6
+CALL :job
+
+CALL :setPattern Capture-##DATE##_##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????????,8,8 ; ??????*,17,6
+CALL :job
+
+CALL :setPattern Capture-##DATE##.##SERIES##.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????????,8,8 ; ??????*,17,6
+CALL :job
+
+
+REM DSC?????-????-??-??*.jpg
+CALL :setPattern DSC##SERIES##-##DATE##*.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,9,10 ; ?????,3,5
+CALL :job
+
+REM IMG_????-????-??-??*.jpg
+CALL :setPattern IMG_##SERIES##-##DATE##*.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,9,10 ; ????,4,4
+CALL :job
+
+REM 0000000000111111111122222222223333333333444
+REM 0123456789012345678901234567890123456789012
+REM WhatsApp Image ????-??-?? at ??.??.??*.jpeg
+CALL :setPattern WhatsApp Image ##DATE## at ##SERIES##*.##TYPE##
+CALL :setTypeDateSeries ???,-4,4 ; ????-??-??,15,10 ; ??.??.??*,29,8
+CALL :job
+
+REM 0000000000111111111122222222223333333333444
+REM 0123456789012345678901234567890123456789012
+REM WhatsApp Video ????-??-?? at ??.??.??*.mp4
+CALL :setPattern WhatsApp Video ##DATE## at ##SERIES##*.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,15,10 ; ??.??.??*,29,8
+CALL :job
+
+REM 0000000000111111111122222222223333333333444
+REM 0123456789012345678901234567890123456789012
+REM WhatsApp Audio ????-??-?? at ??.??.??*.ogg
+CALL :setPattern WhatsApp Audio ##DATE## at ##SERIES##*.##TYPE##
+CALL :setTypeDateSeries ???,-3,3 ; ????-??-??,15,10 ; ??.??.??*,29,8
 CALL :job
 
 :end
@@ -29,8 +108,12 @@ SET _mediaAUD=aac mp3 ogg wav wma
 SET _mediaDOC=doc docx pdf pps ppt pptx txt
 SET _mediaIMG=jpg jpeg png
 SET _mediaVID=3gp mov mp4 mpg
-IF /I "%~1"=="--year" SET _param=1
-IF /I "%~1"=="--month-year" SET _param=2
+IF /I "%~1"=="--year" SET _param=0
+IF /I "%~1"=="--year-month" SET _param=1
+IF /I "%~1"=="--year-date" SET _param=2
+IF /I "%~1"=="--year-month-date" SET _param=3
+FOR /L %%A IN (0,1,3) DO IF /I "%~1"=="-p%%~A" SET _param=%%~A
+
 GOTO :EOF
 
 :job
@@ -40,6 +123,7 @@ GOTO :EOF
 :setPattern
 SET _pattern=%*
 SET _patternList=%_pattern%
+:ECHO %_patternList%
 GOTO :EOF
 
 :setTypeDateSeries
@@ -53,6 +137,11 @@ FOR /F "usebackq tokens=1,3,1-3" %%A IN (`ECHO %_tmp%`) DO (
 FOR %%A IN (type date series) DO (
   CALL :run SET _pattern%%A=%%_pattern%%A:#=,%%
   FOR /F "tokens=1,3,1-3 delims=," %%B IN ('ECHO %%_pattern%%A%%') DO CALL :run SET _patternList=%%_patternList:##%%A##=%%B%% 
+)
+IF EXIST "%_patternList%" (
+ REM ECHO %_patternList%
+ REM DIR /B "%_patternList%"
+ REM ECHO.
 )
 SET _tmp=
 GOTO :EOF
@@ -88,12 +177,13 @@ FOR %%A IN (type date series) DO FOR /F "tokens=1,3,1-3 delims=," %%B IN ('ECHO 
 )
 CALL :getType _ftype %_media%
 FOR %%A IN (" " - _ ) DO CALL :run SET _fdate=%%_fdate:%%A=%%
-IF "%_param%"=="1" SET _fdate=%_fdate:~0,4%\%_fdate%
-IF "%_param%"=="2" SET _fdate=%_fdate:~0,4%\%_fdate:~4,2%\%_fdate%
+IF "%_param%"=="0" SET _fdate=%_fdate:~0,4%
+IF "%_param%"=="1" SET _fdate=%_fdate:~0,4%\%_fdate:~4,2%
+IF "%_param%"=="2" SET _fdate=%_fdate:~0,4%\%_fdate%
+IF "%_param%"=="3" SET _fdate=%_fdate:~0,4%\%_fdate:~4,2%\%_fdate%
 ECHO %_ftype%\%_fdate%\%_flist%
 IF NOT EXIST "%_ftype%\%_fdate%" MD "%_ftype%\%_fdate%"
-MOVE /Y "%_flist%" "%_ftype%\%_fdate%" > nul
-
+MOVE /Y "%_flist%" "%_ftype%\%_fdate%" && ECHO.
 GOTO :EOF
 
 :parse
